@@ -1,0 +1,6 @@
+cluster.name: ctermescluster
+network.host: 0.0.0.0
+http.cors.enabled: true
+http.cors.allow-origin: '*'
+discovery.zen.ping.unicast.hosts: [172.30.0.2]
+action.auto_create_index: .security

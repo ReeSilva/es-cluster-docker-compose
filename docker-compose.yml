@@ -1,0 +1,43 @@
+version: '2'
+
+services:
+  elastic-master:
+    image: "elasticsearch:2.3.3"
+    volumes:
+      - ./elastic-data:/usr/share/elasticsearch/data:rw
+      - ./elastic-config:/usr/share/elasticsearch/config:rw
+    networks:
+      cluster:
+        ipv4_address: 172.30.0.2
+      front:
+        ipv4_address: 172.31.0.3
+  elastic-node:
+    image: "elasticsearch:2.3.3"
+    volumes:
+      - ./elastic-data:/usr/share/elasticsearch/data:rw
+      - ./elastic-config:/usr/share/elasticsearch/config:rw
+    networks:
+      - cluster
+    depends_on:
+      - elastic-master
+  front:
+    image: "kapschtrafficcom/elastichq:v2.0.3"
+    networks:
+      front:
+        ipv4_address: 172.31.0.2
+
+networks:
+  cluster:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/16
+          gateway: 172.30.0.1
+  front:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.31.0.0/16
+          gateway: 172.31.0.1
